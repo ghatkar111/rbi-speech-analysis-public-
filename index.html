@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RBI Leadership Thought Compass · 2020–2025 | Nitin's Research</title>
+  <meta name="description" content="Beige Book-style thematic and tonal analysis of RBI Governor & Deputy Governor speeches from 2020 to 2025. Independent research by Nitin." />
+  <meta property="og:title" content="RBI Leadership Thought Compass · 2020–2025" />
+  <meta property="og:description" content="Where is RBI thinking headed? A beige-book style analysis of 195+ speeches across 6 years." />
+  <meta property="og:type" content="website" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0D0F14; color: #E8E0D0; font-family: Georgia, 'Times New Roman', serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0D0F14; }
+    ::-webkit-scrollbar-thumb { background: #2A2C34; border-radius: 3px; }
+    table { border-collapse: collapse; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const data = {
+      years: ["2020", "2021", "2022", "2023", "2024", "2025"],
+      governor: {
+        "2020": "Shaktikanta Das", "2021": "Shaktikanta Das",
+        "2022": "Shaktikanta Das", "2023": "Shaktikanta Das",
+        "2024": "Das → Malhotra (Dec)", "2025": "Sanjay Malhotra",
+      },
+      speechCount: { "2020": 13, "2021": 22, "2022": 29, "2023": 38, "2024": 55, "2025": 38 },
+      themes: {
+        "Monetary Policy & Inflation":            { "2020":3,"2021":3,"2022":6,"2023":5,"2024":5,"2025":3 },
+        "Financial Stability & Resilience":       { "2020":2,"2021":3,"2022":4,"2023":5,"2024":8,"2025":4 },
+        "Digital / Fintech / Technology":         { "2020":1,"2021":4,"2022":5,"2023":7,"2024":7,"2025":8 },
+        "Financial Inclusion":                    { "2020":2,"2021":4,"2022":2,"2023":3,"2024":4,"2025":5 },
+        "Governance & Regulation":                { "2020":2,"2021":3,"2022":3,"2023":5,"2024":9,"2025":6 },
+        "Climate / Green Finance":                { "2020":0,"2021":1,"2022":2,"2023":2,"2024":3,"2025":4 },
+        "India Growth Narrative":                 { "2020":3,"2021":2,"2022":4,"2023":5,"2024":4,"2025":5 },
+        "Global / Geopolitical":                  { "2020":1,"2021":1,"2022":3,"2023":3,"2024":3,"2025":2 },
+        "Banking Sector Health":                  { "2020":2,"2021":2,"2022":3,"2023":3,"2024":8,"2025":4 },
+        "Emerging Tech Risks (AI/Crypto/Cyber)":  { "2020":0,"2021":1,"2022":2,"2023":1,"2024":2,"2025":4 },
+      },
+      dominantNarrative: {
+        "2020": "Crisis Triage & Survival",
+        "2021": "Post-COVID Reconstruction",
+        "2022": "Inflation Fight & Resilience",
+        "2023": "India's Moment & Stability",
+        "2024": "Institutional Deepening & RBI@90",
+        "2025": "Viksit Bharat & Responsible Innovation",
+      },
+      toneScore: {
+        "2020": { urgency:9, optimism:3, caution:8, reform:4 },
+        "2021": { urgency:6, optimism:5, caution:6, reform:6 },
+        "2022": { urgency:7, optimism:4, caution:8, reform:5 },
+        "2023": { urgency:4, optimism:7, caution:5, reform:6 },
+        "2024": { urgency:4, optimism:6, caution:6, reform:8 },
+        "2025": { urgency:3, optimism:7, caution:5, reform:9 },
+      },
+      newVocab: {
+        "2020": ["COVID-19 response","$5 Trillion Economy","NBFC reform","Financial Education"],
+        "2021": ["CBDC","Account Aggregators","Open Banking","Climate Risk","Retail Direct"],
+        "2022": ["Rupee Internationalisation","Geopolitical spillovers","Crypto assessment","Corporate Bond Markets","DBUs"],
+        "2023": ["G20 Presidency","Cyber Security","FinTech regulation framework","India's Age / Dawn","DPI"],
+        "2024": ["RBI@90","AI in Banking (first title)","Deposit Insurance reform","India at Inflection Point","NaBFID"],
+        "2025": ["Viksit Bharat","Responsible AI (explicit)","Stablecoins","Rethinking Regulations","Net Zero financing"],
+      },
+      keySpeeches: {
+        "2020": [
+          { title: "Seven Ages of India's Monetary Policy", note: "Historical sweep — unusual retrospective framing" },
+          { title: "$5 Trillion Economy: Aspiration to Action", note: "Aspirational growth anchoring" },
+          { title: "It is Time for Banks to Look Deeply Within", note: "Rare self-critical tone to the banking sector" },
+        ],
+        "2021": [
+          { title: "Central Bank Digital Currency — Is This the Future of Money?", note: "CBDC first explicit framing" },
+          { title: "Heed to Heal — Climate Change is the Emerging Financial Risk", note: "Climate risk mainstreamed" },
+          { title: "Beyond COVID: Towards a Stronger, Inclusive and Sustainable Economy", note: "Post-crisis pivot narrative" },
+        ],
+        "2022": [
+          { title: "Internationalisation of the Rupee: Is it time to shift gears?", note: "Rupee globalisation floated explicitly" },
+          { title: "Cryptocurrencies — An assessment", note: "Regulatory pushback on crypto crystallised" },
+          { title: "Taper 2022: Touchdown in Turbulence", note: "Global monetary tightening framed for India" },
+        ],
+        "2023": [
+          { title: "Art of Monetary Policy Making: The Indian Context", note: "Confidence: India has its own model" },
+          { title: "The Dawn of India's Age", note: "Peak India-optimism framing" },
+          { title: "FinTech and the Changing Financial Landscape", note: "FinTech matured from risk to opportunity" },
+        ],
+        "2024": [
+          { title: "India at an Inflection Point: Some Thoughts", note: "Growth pivot acknowledged" },
+          { title: "Central Banking at Crossroads", note: "Existential reflection on CB role — RBI@90 milestone" },
+          { title: "Innovations in Banking — The emerging role for Technology and AI", note: "AI enters vocabulary formally" },
+        ],
+        "2025": [
+          { title: "Responsible AI — Balancing Innovation with Financial Stability", note: "AI governance becomes a stated priority" },
+          { title: "Rethinking Regulations in an Interconnected Financial System", note: "Regulatory introspection — new governor tone" },
+          { title: "Stablecoins — Do They Have a Role in the Financial System?", note: "From crypto-skeptic to nuanced engagement" },
+          { title: "The Evolving Facets of Regulations", note: "Regulatory philosophy shift under Malhotra" },
+        ],
+      },
+      insight2025: [
+        { icon: "👤", label: "Leadership Change", color: "#C8A96E", detail: "Governor Sanjay Malhotra replaced Shaktikanta Das in Dec 2024. New DGs: Dr. Poonam Gupta & Shri Shirish Chandra Murmu. Tone shifts from 'managing stability' to 'building futures'." },
+        { icon: "🤖", label: "AI Goes Explicit", color: "#7EB5A6", detail: "'Responsible AI', 'Transformational Technologies', 'AI Advantage' — AI appears as a named priority in titles. First year AI features across multiple speeches." },
+        { icon: "🇮🇳", label: "Viksit Bharat as Frame", color: "#E07B65", detail: "National development goal 'Viksit Bharat' anchors multiple speeches across microfinance, PSB transformation, banking. A political-economic vision absorbed into RBI's vocabulary." },
+        { icon: "⚖️", label: "Regulatory Introspection", color: "#9B8EC4", detail: "'Regulation by RBI: Some Reflections', 'Rethinking Regulations', 'Evolving Facets' — three speeches questioning regulatory philosophy. Unprecedented in prior years." },
+        { icon: "🪙", label: "Stablecoins Engagement", color: "#5B8DB8", detail: "2022 was crypto-skeptic ('Cryptocurrencies: An assessment'). 2025 asks 'Stablecoins — Do They Have a Role?' — a qualitative shift from rejection to nuanced evaluation." },
+        { icon: "🌱", label: "Climate Mainstreamed", color: "#72A98C", detail: "Green finance, Net Zero, sustainable agriculture — climate appears in 4 speeches vs 0 in 2020. From 'emerging risk' (2021) to operational action (2025)." },
+      ],
+    };
+
+    const THEME_COLORS = ["#C8A96E","#7EB5A6","#E07B65","#9B8EC4","#5B8DB8","#D4A853","#72A98C","#C97B84","#6B9BC3","#B8845A"];
+    const TONE_COLORS  = { urgency:"#E07B65", optimism:"#7EB5A6", caution:"#C8A96E", reform:"#9B8EC4" };
+
+    function hexToRgb(hex) {
+      return `${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)}`;
+    }
+
+    function SectionLabel({ children }) {
+      return (
+        <div style={{ fontSize:"10px", letterSpacing:"2.5px", color:"#555", textTransform:"uppercase",
+          paddingBottom:"8px", borderBottom:"1px solid #1E2028", marginBottom:"4px" }}>
+          {children}
+        </div>
+      );
+    }
+
+    function App() {
+      const [activeYear, setActiveYear]       = useState("2025");
+      const [activeSection, setActiveSection] = useState("overview");
+      const themeKeys = Object.keys(data.themes);
+      const maxVal    = Math.max(...themeKeys.flatMap(t => data.years.map(y => data.themes[t][y])));
+
+      const navBtn = (s) => (
+        <button key={s} onClick={() => setActiveSection(s)} style={{
+          padding:"6px 16px", cursor:"pointer", fontFamily:"inherit",
+          fontSize:"11px", letterSpacing:"1.5px", textTransform:"uppercase",
+          transition:"all 0.2s", borderRadius:"2px",
+          background: activeSection===s ? "#C8A96E" : "transparent",
+          border: `1px solid ${activeSection===s ? "#C8A96E" : "#333"}`,
+          color: activeSection===s ? "#0D0F14" : "#888",
+        }}>{s}</button>
+      );
+
+      return (
+        <div style={{ minHeight:"100vh" }}>
+          {/* ── HEADER ── */}
+          <div style={{ background:"linear-gradient(135deg,#1A1C24 0%,#0D0F14 60%)",
+            borderBottom:"1px solid #2A2C34", padding:"32px 40px 24px", position:"relative", overflow:"hidden" }}>
+            <div style={{ position:"absolute", top:0, right:0, width:"300px", height:"100%",
+              background:"radial-gradient(ellipse at right top,rgba(200,169,110,0.08) 0%,transparent 70%)" }} />
+            <div style={{ fontSize:"10px", letterSpacing:"4px", color:"#C8A96E", textTransform:"uppercase", marginBottom:"8px" }}>
+              Research Framework · Beige Book Style Analysis
+            </div>
+            <h1 style={{ fontSize:"28px", fontWeight:"400", letterSpacing:"-0.5px", lineHeight:1.2, margin:0 }}>
+              RBI Leadership Thought Compass
+            </h1>
+            <div style={{ fontSize:"13px", color:"#888", marginTop:"6px", letterSpacing:"0.5px" }}>
+              Thematic & Tonal Evolution of Governor & Deputy Governor Speeches · 2020–2025
+            </div>
+            <div style={{ fontSize:"11px", color:"#555", marginTop:"4px" }}>
+              Independent research by Nitin · Source: RBI Speeches archive · 195+ speeches coded
+            </div>
+            <div style={{ marginTop:"20px", display:"flex", gap:"8px", flexWrap:"wrap" }}>
+              {["overview","themes","tone","vocabulary","2025 shift"].map(navBtn)}
+            </div>
+          </div>
+
+          <div style={{ padding:"32px 40px" }}>
+
+            {/* ── OVERVIEW ── */}
+            {activeSection==="overview" && (
+              <div>
+                <div style={{ marginBottom:"32px" }}>
+                  <SectionLabel>Annual Dominant Narrative Arc — click a year to drill into themes</SectionLabel>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(6,1fr)", gap:"12px", marginTop:"12px" }}>
+                    {data.years.map((y,i) => (
+                      <div key={y} onClick={() => { setActiveYear(y); setActiveSection("themes"); }}
+                        style={{ background: y==="2025"?"rgba(200,169,110,0.12)":"rgba(255,255,255,0.03)",
+                          border:`1px solid ${y==="2025"?"#C8A96E":"#222"}`,
+                          borderRadius:"4px", padding:"16px 14px", cursor:"pointer", transition:"all 0.2s" }}>
+                        <div style={{ fontSize:"22px", fontWeight:"300", color:y==="2025"?"#C8A96E":"#666", marginBottom:"8px" }}>{y}</div>
+                        <div style={{ fontSize:"12px", color:"#E8E0D0", lineHeight:1.4, fontStyle:"italic" }}>{data.dominantNarrative[y]}</div>
+                        <div style={{ marginTop:"10px", fontSize:"10px", color:"#555" }}>{data.speechCount[y]} speeches</div>
+                        <div style={{ marginTop:"4px", height:"3px", background:"#1A1C24", borderRadius:"2px" }}>
+                          <div style={{ height:"100%", width:`${(data.speechCount[y]/55)*100}%`,
+                            background:y==="2025"?"#C8A96E":"#444", borderRadius:"2px" }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ marginBottom:"32px" }}>
+                  <SectionLabel>Governor at the Helm</SectionLabel>
+                  <div style={{ display:"flex", marginTop:"12px" }}>
+                    {data.years.map((y,i) => (
+                      <div key={y} style={{ flex:1, borderLeft:i===0?"none":"1px solid #222" }}>
+                        <div style={{ padding:"10px 14px",
+                          background:y==="2025"?"rgba(200,169,110,0.08)":y==="2024"?"rgba(126,181,166,0.05)":"rgba(255,255,255,0.02)" }}>
+                          <div style={{ fontSize:"10px", color:"#666", marginBottom:"4px" }}>{y}</div>
+                          <div style={{ fontSize:"10px", lineHeight:1.4,
+                            color:y==="2025"?"#C8A96E":y==="2024"?"#7EB5A6":"#888" }}>
+                            {data.governor[y]}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <SectionLabel>Theme Heat Map · All Years</SectionLabel>
+                  <div style={{ marginTop:"16px", overflowX:"auto" }}>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th style={{ textAlign:"left", padding:"8px 12px", color:"#666", fontWeight:"normal",
+                            fontSize:"10px", letterSpacing:"1px", textTransform:"uppercase", width:"230px" }}>Theme</th>
+                          {data.years.map(y => (
+                            <th key={y} style={{ padding:"8px 12px", color:y==="2025"?"#C8A96E":"#666",
+                              fontWeight:"normal", fontSize:"10px", letterSpacing:"1px", textTransform:"uppercase" }}>{y}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {themeKeys.map((theme,ti) => (
+                          <tr key={theme} style={{ borderTop:"1px solid rgba(255,255,255,0.04)" }}>
+                            <td style={{ padding:"10px 12px", color:"#AAA", fontSize:"11px" }}>
+                              <span style={{ display:"inline-block", width:"8px", height:"8px", borderRadius:"50%",
+                                background:THEME_COLORS[ti], marginRight:"8px" }} />
+                              {theme}
+                            </td>
+                            {data.years.map(y => {
+                              const val = data.themes[theme][y];
+                              const op  = val===0 ? 0.05 : 0.1+(val/maxVal)*0.7;
+                              return (
+                                <td key={y} style={{ padding:"10px 12px", textAlign:"center" }}>
+                                  <div style={{ display:"inline-flex", alignItems:"center", justifyContent:"center",
+                                    width:"28px", height:"28px", borderRadius:"4px",
+                                    background:`rgba(${hexToRgb(THEME_COLORS[ti])},${op})`,
+                                    color:val>3?THEME_COLORS[ti]:"#666",
+                                    fontSize:"12px", fontWeight:val>4?"600":"400" }}>{val}</div>
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── THEMES ── */}
+            {activeSection==="themes" && (
+              <div>
+                <div style={{ display:"flex", gap:"8px", marginBottom:"24px", flexWrap:"wrap" }}>
+                  {data.years.map(y => (
+                    <button key={y} onClick={() => setActiveYear(y)} style={{
+                      padding:"8px 20px", cursor:"pointer", fontFamily:"inherit", fontSize:"13px",
+                      transition:"all 0.2s", borderRadius:"2px",
+                      background: activeYear===y?(y==="2025"?"#C8A96E":"#E8E0D0"):"transparent",
+                      border:`1px solid ${activeYear===y?"transparent":"#333"}`,
+                      color: activeYear===y?"#0D0F14":"#666",
+                    }}>{y}</button>
+                  ))}
+                </div>
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"24px" }}>
+                  <div>
+                    <SectionLabel>Theme Distribution — {activeYear}</SectionLabel>
+                    <div style={{ marginTop:"16px" }}>
+                      {themeKeys.map((theme,ti) => {
+                        const val = data.themes[theme][activeYear];
+                        return (
+                          <div key={theme} style={{ marginBottom:"12px" }}>
+                            <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"4px" }}>
+                              <span style={{ fontSize:"11px", color:"#999" }}>{theme}</span>
+                              <span style={{ fontSize:"11px", color:THEME_COLORS[ti] }}>{val}</span>
+                            </div>
+                            <div style={{ height:"4px", background:"#1A1C24", borderRadius:"2px" }}>
+                              <div style={{ height:"100%", width:`${(val/10)*100}%`,
+                                background:THEME_COLORS[ti], borderRadius:"2px", transition:"width 0.4s ease" }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div>
+                    <SectionLabel>Landmark Speeches — {activeYear}</SectionLabel>
+                    <div style={{ marginTop:"16px" }}>
+                      {(data.keySpeeches[activeYear]||[]).map((s,i) => (
+                        <div key={i} style={{ marginBottom:"16px", padding:"14px 16px",
+                          background:"rgba(255,255,255,0.03)",
+                          borderLeft:`3px solid ${THEME_COLORS[i%THEME_COLORS.length]}`,
+                          borderRadius:"0 4px 4px 0" }}>
+                          <div style={{ fontSize:"12px", color:"#E8E0D0", lineHeight:1.5, marginBottom:"6px", fontStyle:"italic" }}>
+                            "{s.title}"
+                          </div>
+                          <div style={{ fontSize:"11px", color:"#666", lineHeight:1.4 }}>→ {s.note}</div>
+                        </div>
+                      ))}
+                      <div style={{ marginTop:"20px", padding:"16px",
+                        background:"rgba(200,169,110,0.06)", border:"1px solid rgba(200,169,110,0.2)", borderRadius:"4px" }}>
+                        <div style={{ fontSize:"10px", color:"#C8A96E", letterSpacing:"2px", textTransform:"uppercase", marginBottom:"8px" }}>
+                          Dominant Narrative
+                        </div>
+                        <div style={{ fontSize:"14px", color:"#E8E0D0", fontStyle:"italic" }}>{data.dominantNarrative[activeYear]}</div>
+                        <div style={{ marginTop:"10px", fontSize:"11px", color:"#888" }}>Governor: {data.governor[activeYear]}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── TONE ── */}
+            {activeSection==="tone" && (
+              <div>
+                <SectionLabel>Tonal Barometer — Four Dimensions Across Years</SectionLabel>
+                <div style={{ fontSize:"12px", color:"#666", marginTop:"6px", marginBottom:"24px" }}>
+                  Scored 1–10 based on keyword frequency and framing in speech titles · Researcher-coded
+                </div>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:"24px" }}>
+                  {Object.entries(TONE_COLORS).map(([tone, col]) => (
+                    <div key={tone} style={{ padding:"20px", background:"rgba(255,255,255,0.02)",
+                      border:"1px solid #1E2028", borderRadius:"4px" }}>
+                      <div style={{ fontSize:"10px", color:col, letterSpacing:"2px", textTransform:"uppercase", marginBottom:"16px" }}>
+                        {tone==="urgency"?"🔴 Urgency":tone==="optimism"?"🟢 Optimism":tone==="caution"?"🟡 Caution":"🟣 Reform Drive"}
+                      </div>
+                      {data.years.map(y => {
+                        const val = data.toneScore[y][tone];
+                        return (
+                          <div key={y} style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"10px" }}>
+                            <span style={{ width:"36px", fontSize:"12px", color:"#666" }}>{y}</span>
+                            <div style={{ flex:1, height:"6px", background:"#1A1C24", borderRadius:"3px" }}>
+                              <div style={{ height:"100%", width:`${val*10}%`, borderRadius:"3px",
+                                background:y==="2025"?col:`rgba(${hexToRgb(col)},0.45)`,
+                                transition:"width 0.4s" }} />
+                            </div>
+                            <span style={{ width:"16px", fontSize:"12px", color:y==="2025"?col:"#555" }}>{val}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop:"24px", padding:"20px",
+                  background:"rgba(200,169,110,0.05)", border:"1px solid rgba(200,169,110,0.15)", borderRadius:"4px" }}>
+                  <SectionLabel>Reading the Tonal Shift: 2022 → 2025</SectionLabel>
+                  <div style={{ marginTop:"12px", display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"16px" }}>
+                    {[
+                      { years:"2020–2022", tone:"High urgency, high caution",
+                        detail:"Crisis management mode. Speeches heavily weighted toward stabilisation, pandemic response, inflation firefighting." },
+                      { years:"2023–2024", tone:"Rising optimism, deepening reform",
+                        detail:"India narrative confidence peaks. 'Dawn of India's Age', 'Inflection Point'. Institutional reform intensifies." },
+                      { years:"2025", tone:"Lower urgency, highest reform drive",
+                        detail:"New governor brings introspective, forward-looking tone. Regulatory rethinking and AI governance replace crisis language." },
+                    ].map((c,i) => (
+                      <div key={i} style={{ padding:"14px", background:"rgba(255,255,255,0.02)", borderRadius:"4px" }}>
+                        <div style={{ fontSize:"11px", color:"#C8A96E", marginBottom:"6px" }}>{c.years}</div>
+                        <div style={{ fontSize:"12px", color:"#E8E0D0", fontStyle:"italic", marginBottom:"8px" }}>{c.tone}</div>
+                        <div style={{ fontSize:"11px", color:"#777", lineHeight:1.5 }}>{c.detail}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── VOCABULARY ── */}
+            {activeSection==="vocabulary" && (
+              <div>
+                <SectionLabel>New Vocabulary Introduced Each Year</SectionLabel>
+                <div style={{ fontSize:"12px", color:"#666", marginTop:"6px", marginBottom:"24px" }}>
+                  Terms/concepts first appearing prominently in speech titles — signals where RBI attention is moving
+                </div>
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"16px" }}>
+                  {data.years.map((y,yi) => (
+                    <div key={y} style={{ padding:"20px",
+                      background:y==="2025"?"rgba(200,169,110,0.06)":"rgba(255,255,255,0.02)",
+                      border:`1px solid ${y==="2025"?"rgba(200,169,110,0.3)":"#1E2028"}`,
+                      borderRadius:"4px" }}>
+                      <div style={{ fontSize:"20px", fontWeight:"300", color:y==="2025"?"#C8A96E":"#555", marginBottom:"4px" }}>{y}</div>
+                      <div style={{ fontSize:"10px", color:"#555", marginBottom:"14px", letterSpacing:"1px" }}>
+                        {data.dominantNarrative[y]}
+                      </div>
+                      {data.newVocab[y].map((v,i) => (
+                        <div key={i} style={{ display:"inline-block", margin:"3px 4px 3px 0",
+                          padding:"4px 10px", borderRadius:"2px", fontSize:"10px",
+                          background:`rgba(${hexToRgb(THEME_COLORS[yi])},0.12)`,
+                          border:`1px solid rgba(${hexToRgb(THEME_COLORS[yi])},0.25)`,
+                          color:THEME_COLORS[yi] }}>{v}</div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop:"24px", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"20px" }}>
+                  <div style={{ padding:"18px", background:"rgba(126,181,166,0.05)", border:"1px solid rgba(126,181,166,0.15)", borderRadius:"4px" }}>
+                    <div style={{ fontSize:"10px", color:"#7EB5A6", letterSpacing:"2px", textTransform:"uppercase", marginBottom:"12px" }}>↑ Rising Across Years</div>
+                    {["Climate/Green Finance: 0 → 4 speeches","AI/Emerging Tech: 0 → 4 speeches in 2025",
+                      "Governance & Regulation: intensifying every year",
+                      "Financial Inclusion: re-energised in 2025 (DPI lens)",
+                      "Digital Public Infrastructure: minor in 2022, central by 2025"]
+                      .map((t,i) => <div key={i} style={{ fontSize:"12px", color:"#AAA", padding:"5px 0", borderBottom:"1px solid rgba(255,255,255,0.04)" }}>{t}</div>)}
+                  </div>
+                  <div style={{ padding:"18px", background:"rgba(224,123,101,0.05)", border:"1px solid rgba(224,123,101,0.15)", borderRadius:"4px" }}>
+                    <div style={{ fontSize:"10px", color:"#E07B65", letterSpacing:"2px", textTransform:"uppercase", marginBottom:"12px" }}>↓ Fading or Resolved</div>
+                    {["COVID-19 Recovery: dominant 2020–21, absent by 2023",
+                      "NBFC Stress (acute phase): resolved by 2023",
+                      "$5 Trillion target framing: replaced by 'Viksit Bharat'",
+                      "Cryptocurrency concern: pivoted to nuanced stablecoins talk",
+                      "Taper/Rate hike urgency: resolved with inflation normalisation"]
+                      .map((t,i) => <div key={i} style={{ fontSize:"12px", color:"#AAA", padding:"5px 0", borderBottom:"1px solid rgba(255,255,255,0.04)" }}>{t}</div>)}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── 2025 SHIFT ── */}
+            {activeSection==="2025 shift" && (
+              <div>
+                <div style={{ marginBottom:"24px" }}>
+                  <div style={{ fontSize:"10px", color:"#C8A96E", letterSpacing:"3px", textTransform:"uppercase", marginBottom:"8px" }}>
+                    2025 Change Analysis
+                  </div>
+                  <h2 style={{ fontSize:"22px", fontWeight:"400", color:"#E8E0D0", margin:0 }}>What Changed in 2025?</h2>
+                  <p style={{ fontSize:"13px", color:"#777", marginTop:"8px", lineHeight:1.7, maxWidth:"700px" }}>
+                    A new governor brings more than a name change. Speech titles are a leading indicator of institutional priorities.
+                    Six structural shifts are visible from title-level analysis alone.
+                  </p>
+                </div>
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px", marginBottom:"28px" }}>
+                  {data.insight2025.map((ins,i) => (
+                    <div key={i} style={{ padding:"20px 22px", background:"rgba(255,255,255,0.02)",
+                      border:"1px solid #222", borderLeft:`3px solid ${ins.color}`,
+                      borderRadius:"0 4px 4px 0" }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"10px" }}>
+                        <span style={{ fontSize:"20px" }}>{ins.icon}</span>
+                        <span style={{ fontSize:"12px", color:ins.color, letterSpacing:"1.5px", textTransform:"uppercase" }}>{ins.label}</span>
+                      </div>
+                      <div style={{ fontSize:"12px", color:"#AAA", lineHeight:1.7 }}>{ins.detail}</div>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <SectionLabel>Framing Comparison: Das Era vs. Malhotra Era (from speech titles)</SectionLabel>
+                  <div style={{ marginTop:"16px" }}>
+                    <table>
+                      <thead>
+                        <tr style={{ borderBottom:"1px solid #2A2C34" }}>
+                          {["Dimension","Das 2020–2024","Malhotra 2025"].map((h,i) => (
+                            <th key={h} style={{ padding:"10px 14px", textAlign:"left", fontWeight:"normal",
+                              fontSize:"10px", letterSpacing:"1.5px", textTransform:"uppercase",
+                              color:i===0?"#666":i===1?"#7EB5A6":"#C8A96E" }}>{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          ["Growth framing","'$5 Trillion', 'Inflection Point', 'Story of Resilience'","'Viksit Bharat', 'Partner in Progress', 'Stability, Trust, Growth'"],
+                          ["Technology stance","Fintech multiplier, CBDC exploration, crypto skepticism","Responsible AI, Stablecoins engagement, DPI centrality"],
+                          ["Regulatory tone","Strong enforcement, prudential tightening","Reflections, Rethinking, Evolving — introspective"],
+                          ["Climate","Risk acknowledgement, green finance opportunities","Net Zero, Sustainable infrastructure, action-oriented"],
+                          ["Global positioning","Geopolitical spillovers, resilience against shocks","Partner in prosperity, FATF, global economic forums"],
+                          ["Institution focus","Banks, NBFCs, governance tightening","PSBs transformation, UCBs, SFBs — wider ecosystem"],
+                        ].map(([dim,das,mal],i) => (
+                          <tr key={i} style={{ borderBottom:"1px solid rgba(255,255,255,0.04)" }}>
+                            <td style={{ padding:"12px 14px", color:"#777", fontSize:"11px" }}>{dim}</td>
+                            <td style={{ padding:"12px 14px", color:"#AAA", fontSize:"11px", lineHeight:1.5 }}>{das}</td>
+                            <td style={{ padding:"12px 14px", color:"#E8E0D0", fontSize:"11px", lineHeight:1.5 }}>{mal}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div style={{ marginTop:"24px", padding:"20px 24px",
+                  background:"rgba(200,169,110,0.06)", border:"1px solid rgba(200,169,110,0.2)", borderRadius:"4px" }}>
+                  <div style={{ fontSize:"10px", color:"#C8A96E", letterSpacing:"2px", textTransform:"uppercase", marginBottom:"10px" }}>
+                    Research Synthesis · Nitin's Note
+                  </div>
+                  <p style={{ fontSize:"13px", color:"#BBB", lineHeight:1.8, margin:0 }}>
+                    The 2025 shift is not merely cosmetic. The RBI's speech corpus — read as a "beige book" of institutional thinking — shows a
+                    pivot from <em>reactive stabilisation</em> (2020–22) through <em>confident India-narrative building</em> (2023–24) to what can be
+                    characterised as <em>anticipatory architecture</em> in 2025: designing regulatory frameworks for AI, stablecoins, and Net Zero
+                    before crises demand it. The vocabulary of introspection ('Rethinking', 'Reflections', 'Evolving') alongside aspiration
+                    ('Viksit Bharat') signals an institution that believes it has earned the right to plan, not just manage.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Footer */}
+            <div style={{ marginTop:"48px", paddingTop:"20px", borderTop:"1px solid #1E2028",
+              display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+              <div style={{ fontSize:"11px", color:"#444" }}>
+                Independent research by Nitin · Data source: rbi.org.in/Scripts/BS_SpeechesView.aspx · 195+ speeches · 2020–2025
+              </div>
+              <div style={{ fontSize:"11px", color:"#444" }}>
+                Methodology: title-level thematic coding · researcher-scored tonal index
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
